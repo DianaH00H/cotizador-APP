@@ -16,10 +16,7 @@ COLUMNAS_TICKET = [
     "flujo", "rango", "costo_estimado", "costo_final", "estatus"
 ]
 
-USUARIOS = {
-    "carrier":  {"password": "carrier123", "rol": "carrier"},
-    "ventas":   {"password": "ventas123",  "rol": "ventas"},
-}
+USUARIOS = st.secrets["usuarios"]
 
 
 def aplicar_estilo():
