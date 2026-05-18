@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import date
+from datetime import datetime
+import pytz
 from fpdf import FPDF
 import io
 
@@ -129,7 +130,8 @@ if "ultima_cotizacion" in st.session_state:
 
     tickets_df = cargar_tickets()
     folio      = siguiente_folio(tickets_df)
-    fecha_hoy  = date.today().strftime("%Y-%m-%d")
+    fecha_hoy = datetime.now(pytz.timezone("America/Mexico_City")).strftime("%Y-%m-%d")
+
 
     st.write(f"Folio asignado: **{folio}**  |  Fecha: **{fecha_hoy}**")
 
