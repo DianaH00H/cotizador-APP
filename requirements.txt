@@ -5,3 +5,4 @@ scikit-learn>=1.6.0
 xgboost>=2.0.0
 fpdf2>=2.7.0
 openpyxl>=3.1.0
+pytz>=2024.1
