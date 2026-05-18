@@ -196,8 +196,20 @@ if "ultima_cotizacion" in st.session_state:
 
             return bytes(pdf.output())
 
-        pdf_bytes = generar_pdf({**c, "folio": folio, "fecha": fecha_hoy,
-                                  "usuario": st.session_state.usuario})
+        pdf_bytes = generar_pdf({
+            "folio":          folio,
+            "fecha":          fecha_hoy,
+            "usuario":        st.session_state.usuario,
+            "cliente":        c["cliente"],
+            "origen_estado":  c["origen"],
+            "destino_estado": c["destino"],
+            "tipo_equipo":    c["tipo_equipo"],
+            "flujo":          c["flujo"],
+            "rango":          c["rango"],
+            "costo_estimado": c["costo_estimado"],
+            "rango_min":      c["rango_min"],
+            "rango_max":      c["rango_max"],
+        })
 
         st.download_button(
             label="Descargar ticket PDF",
