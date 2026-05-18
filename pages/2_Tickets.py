@@ -143,7 +143,9 @@ if folio_seleccionado:
             tickets_df.at[idx, "costo_final"] = costo_final_nuevo
             tickets_df.at[idx, "estatus"]      = estatus_nuevo
             guardar_tickets(tickets_df)
-            st.success(f"Ticket {folio_seleccionado} actualizado.")
+            st.success("Cambios guardados correctamente.")
+            import time
+            time.sleep(1.5)
             st.rerun()
 
     with col_btn2:
