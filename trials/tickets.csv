@@ -3,7 +3,7 @@ FLI-0001,2026-06-06,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconoc
 FLI-0002,2026-06-06,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,29139.48,Rechazado,,,,,,En proceso
 FLI-0003,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,,,Por cobrar
 FLI-0004,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,DryVan 53,Desconocido,Backup,24511.66,24511.66,Pendiente,,,,,,Por cobrar
-FLI-0005,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,Rabón Abierto,Northbound,Contracted,9369.51,9369.51,Pendiente,,,,,1999999.0,Por cobrar
+FLI-0005,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,Rabón Abierto,Northbound,Contracted,9369.51,9369.51,Pendiente,,,,,1999999.0,Cobrado
 FLI-0006,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,Rabón Abierto,Northbound,Contracted,9369.51,9369.51,Pendiente,,,,,,Por cobrar
 FLI-0007,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,,,Por cobrar
 FLI-0008,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,,,Por cobrar
@@ -11,11 +11,17 @@ FLI-0009,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconoc
 FLI-0010,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,24386.54,31298.68,27842.61,,,Por cobrar
 FLI-0011,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,27842.61,27842.61,Por cobrar
 FLI-0012,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,27842.61,27842.61,Por cobrar
-FLI-0013,2026-06-08,carrier,Cliente 1,Aguascalientes,Chihuahua,1.5,Desconocido,Backup,61059.17,61059.17,Pendiente,,,,68996.86,68996.86,Por cobrar
+FLI-0013,2026-06-08,carrier,Cliente 1,Aguascalientes,Chihuahua,1.5,Desconocido,Backup,61059.17,61059.17,Pendiente,,,,68996.86,68996.86,Cobrado
 FLI-0014,2026-06-08,carrier,Cliente 103,Aguascalientes,Chihuahua,1.5,Desconocido,Backup,50691.96,50691.96,Pendiente,,,,57281.91,57281.91,Cobrado
 FLI-0015,2026-06-08,carrier,Cliente 100,Colima,Chihuahua,DryVan / Reefer,Desconocido,Backup,55744.56,55744.56,Pendiente,,,,62991.36,62991.36,Cobrado
 FLI-0016,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,27842.61,27842.61,Cobrado
 FLI-0017,2026-06-08,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,27842.61,27842.61,Por cobrar
 FLI-0018,2026-06-09,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24639.48,Pendiente,,,,27842.61,27842.61,Por cobrar
-FLI-0019,2026-06-09,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,44139.48,Aprobado,,,,27842.61,42842.61,Por cobrar
+FLI-0019,2026-06-09,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,44139.48,Aprobado,,,,27842.61,42842.61,Cobrado
 FLI-0020,2026-06-09,carrier,Cliente 103,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,15880.13,15880.13,Pendiente,,,,17944.55,17944.55,Cobrado
+FLI-0021,2026-06-09,carrier,Cliente 103,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,15880.13,95880.13,Aprobado,,,,17944.55,97944.55,Cobrado
+FLI-0022,2026-06-09,carrier,Cliente 100,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,9558.47,91558.47,Aprobado,,,,10801.07,90801.07,Cobrado
+FLI-0023,2026-06-09,carrier,Cliente 161,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,-4529.94,-4529.94,Pendiente,,,,-5118.83,-5118.83,
+FLI-0024,2026-06-09,carrier,Cliente 101,Chihuahua,Baja California,DryVan 53,Import,Contracted,83957.27,83957.27,Pendiente,,,,94871.72,94871.72,
+FLI-0025,2026-06-09,carrier,Cliente 101,Chihuahua,Baja California,DryVan 53,Import,Contracted,83957.27,123957.27,Aprobado,,,,94871.72,144871.72,
+FLI-0026,2026-06-09,carrier,Cliente 1,Aguascalientes,Aguascalientes,1.5,Desconocido,Backup,24639.48,24739.48,Aprobado,,,,27842.61,27942.61,

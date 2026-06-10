@@ -7,13 +7,16 @@ from pathlib import Path
 # Utilidades compartidas entre paginas
 # ------------------------------------------------------------------
 
-TICKETS_PATH = Path("data/tickets.csv")
-MODEL_PATH   = Path("model/modelo_final.pkl")
+TICKETS_PATH = Path("trials/tickets.csv")
+MODEL_PATH   = Path("trials/modelo_final.pkl")
 
 COLUMNAS_TICKET = [
     "folio", "fecha", "usuario", "cliente",
     "origen_estado", "destino_estado", "tipo_equipo",
-    "flujo", "rango", "costo_estimado", "costo_final", "estatus"
+    "flujo", "rango",
+    "costo_estimado", "costo_final",
+    "venta_estimada", "venta_final",
+    "estatus", "estatus_cobro"
 ]
 
 USUARIOS = st.secrets["usuarios"]
@@ -24,7 +27,7 @@ def aplicar_estilo():
         <style>
             /* Sidebar */
             [data-testid="stSidebar"] {
-                background-color: #0A2342;
+                background-color: #6b5b95;
             }
             [data-testid="stSidebar"] * {
                 color: #FFFFFF !important;
@@ -32,7 +35,7 @@ def aplicar_estilo():
 
             /* Botones principales */
             .stButton > button {
-                background-color: #0A2342;
+                background-color: #EBBA07;
                 color: #FFFFFF;
                 border: none;
                 border-radius: 6px;
@@ -41,13 +44,13 @@ def aplicar_estilo():
                 width: 100%;
             }
             .stButton > button:hover {
-                background-color: #163A6B;
+                background-color: #EBBA07;
                 color: #FFFFFF;
             }
 
             /* Encabezado de pagina */
             .fli-header {
-                background-color: #0A2342;
+                background-color: #6b5b95;
                 color: #FFFFFF;
                 padding: 1.2rem 2rem;
                 border-radius: 8px;
@@ -67,17 +70,17 @@ def aplicar_estilo():
             /* Tarjeta de resultado */
             .fli-card {
                 background-color: #F0F4F8;
-                border-left: 5px solid #0A2342;
+                border-left: 5px solid #6b5b95;
                 padding: 1rem 1.5rem;
                 border-radius: 6px;
                 margin: 1rem 0;
             }
             .fli-card h3 {
-                color: #0A2342;
+                color: #6b5b95;
                 margin: 0 0 0.5rem 0;
             }
             .fli-card p {
-                color: #0A2342;
+                color: #6b5b95;
                 margin: 0.2rem 0;
             }
 
