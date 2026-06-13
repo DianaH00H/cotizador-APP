@@ -3,12 +3,23 @@ import pandas as pd
 import pickle
 from pathlib import Path
 
+# Necesario para des-serializar modelo_cotizador.pkl: la clase debe ser
+# importable en el momento del pickle.load (el .pkl la referencia por modulo).
+from cotizador_pipeline import CotizadorPipeline  # noqa: F401
+
 # ------------------------------------------------------------------
 # Utilidades compartidas entre paginas
 # ------------------------------------------------------------------
 
-TICKETS_PATH = Path("trials/tickets.csv")
-MODEL_PATH   = Path("trials/modelo_final.pkl")
+TICKETS_PATH    = Path("trials/tickets.csv")
+MODEL_PATH      = Path("trials/modelo_final.pkl")
+COTIZADOR_PATH  = Path("trials/modelo_cotizador.pkl")
+LOADBOARD_PATH  = Path("trials/Loadboard.csv")
+
+# Margen de utilidad sobre el costo. El modelo cotizador predice la VENTA
+# directamente; el costo se deriva como venta / (1 + UTILIDAD) para conservar
+# el esquema de tickets y las metricas de la pagina de modelado.
+UTILIDAD = 0.13
 
 COLUMNAS_TICKET = [
     "folio", "fecha", "usuario", "cliente",
@@ -111,6 +122,33 @@ def cargar_modelo():
     with open(MODEL_PATH, "rb") as f:
         payload = pickle.load(f)
     return payload
+
+
+def cargar_cotizador():
+    """Carga el modelo autocontenido (CotizadorPipeline) usado para cotizar.
+
+    Recibe las variables crudas y devuelve la VENTA_EN_MXN ya lista, sin que la
+    app tenga que replicar el One-Hot Encoding ni el preprocesamiento.
+    """
+    with open(COTIZADOR_PATH, "rb") as f:
+        cotizador = pickle.load(f)
+    return cotizador
+
+
+def cargar_clientes() -> list:
+    """Lista de clientes para el desplegable de cotizacion.
+
+    El modelo no usa el cliente como variable, pero el flujo de tickets y
+    cobranza si lo necesita, asi que se ofrece desde el historico (Loadboard).
+    """
+    if LOADBOARD_PATH.exists():
+        try:
+            lb = pd.read_csv(LOADBOARD_PATH)
+            if "CLIENTE" in lb.columns:
+                return sorted(lb["CLIENTE"].dropna().astype(str).unique().tolist())
+        except Exception:
+            pass
+    return []
 
 
 def cargar_tickets() -> pd.DataFrame:

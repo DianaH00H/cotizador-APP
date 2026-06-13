@@ -11,8 +11,9 @@ import io
 import sys
 
 from utils import (
-    aplicar_estilo, USUARIOS,
-    cargar_modelo, cargar_tickets, guardar_tickets, siguiente_folio
+    aplicar_estilo, USUARIOS, UTILIDAD,
+    cargar_modelo, cargar_cotizador, cargar_clientes,
+    cargar_tickets, guardar_tickets, siguiente_folio
 )
 
 st.set_page_config(
@@ -174,22 +175,17 @@ def _header_with_logout(titulo: str, subtitulo: str = ""):
 def cotizacion_page():
     _header_with_logout("Nueva Cotizacion", "Ingresa los datos del flete para generar una estimacion de costo.")
 
-    if "modelo_payload" not in ss:
-        ss.modelo_payload = cargar_modelo()
+    if "cotizador" not in ss:
+        ss.cotizador = cargar_cotizador()
 
-    payload  = ss.modelo_payload
-    modelo   = payload["modelo"]
-    encoders = payload["encoders"]
-    mae      = payload["metricas"]["mae"]
+    cotizador = ss.cotizador
+    mae       = float(cotizador.metricas.get("mae", 0.0))   # MAE sobre la VENTA
 
     def opciones(col):
-        return sorted(encoders[col].classes_.tolist())
+        return [str(v) for v in cotizador.opciones.get(col, [])]
 
-    def encode(col, valor):
-        le = encoders[col]
-        if valor in le.classes_:
-            return int(le.transform([valor])[0])
-        return int(le.transform(["Desconocido"])[0])
+    clientes = cargar_clientes()
+    mes_actual = datetime.now(pytz.timezone("America/Mexico_City")).month
 
     with st.form("form_cotizacion"):
 
@@ -202,17 +198,22 @@ def cotizacion_page():
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            cliente    = st.selectbox("Cliente",           opciones("CLIENTE"))
+            if clientes:
+                cliente = st.selectbox("Cliente", clientes)
+            else:
+                cliente = st.text_input("Cliente", value="")
         with col2:
-            origen_est = st.selectbox("Estado de origen",  opciones("ORIGEN_ESTADO"))
+            origen = st.selectbox("Origen (Ciudad, Estado)", opciones("ORIGEN"))
         with col3:
-            destino_est = st.selectbox("Estado de destino", opciones("DESTINO_ESTADO"))
+            destino = st.selectbox("Destino (Ciudad, Estado)", opciones("DESTINO"))
 
-        col4, col5 = st.columns(2)
+        col4, col5, col6 = st.columns(3)
         with col4:
             flujo = st.selectbox("Flujo", opciones("FLUJO"))
         with col5:
             rango = st.selectbox("Rango", opciones("RANGO"))
+        with col6:
+            tipo_venta = st.selectbox("Tipo de venta", opciones("TIPO_DE_VENTA"))
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -224,49 +225,51 @@ def cotizacion_page():
                 </p>
             """, unsafe_allow_html=True)
 
-            col6, col7, col8 = st.columns(3)
-            with col6:
+            col7, col8, col9 = st.columns(3)
+            with col7:
                 tipo_equipo = st.selectbox("Tipo de equipo", opciones("TIPO_DE_EQUIPO"))
-            # --- MANIOBRAS: comentado hasta tener datos ---
-            # with col7:
-            #     maniobras = st.selectbox("Maniobras", opciones("MANIOBRAS"))
-            # --- ACCESORIALES: comentado hasta tener datos ---
-            # with col8:
-            #     accesoriales = st.selectbox("Accesoriales", opciones("ACCESORIALES"))
+            with col8:
+                meses_opts = [str(m) for m in cotizador.opciones.get("MONTH", list(range(1, 13)))]
+                mes = st.selectbox(
+                    "Mes del flete", meses_opts,
+                    index=meses_opts.index(str(mes_actual)) if str(mes_actual) in meses_opts else 0,
+                )
+            with col9:
+                accesoriales = st.number_input(
+                    "Accesoriales (cantidad)", min_value=0, value=0, step=1)
 
         cotizar = st.form_submit_button("Cotizar", use_container_width=True)
 
     if cotizar:
-        X_nuevo = pd.DataFrame([{
-            "TIPO_DE_EQUIPO": encode("TIPO_DE_EQUIPO", tipo_equipo),
-            "CLIENTE":        encode("CLIENTE",        cliente),
-            "FLUJO":          encode("FLUJO",          flujo),
-            "RANGO":          encode("RANGO",          rango),
-            "COSTO_EN_MXN":   0,
-            "ORIGEN_ESTADO":  encode("ORIGEN_ESTADO",  origen_est),
-            "DESTINO_ESTADO": encode("DESTINO_ESTADO", destino_est),
-            # --- MANIOBRAS: agregar cuando haya datos ---
-            # "MANIOBRAS":      encode("MANIOBRAS",      maniobras),
-            # --- ACCESORIALES: agregar cuando haya datos ---
-            # "ACCESORIALES":   encode("ACCESORIALES",   accesoriales),
-        }])
-        X_nuevo = X_nuevo[payload["features"]]
-        costo   = float(modelo.predict(X_nuevo)[0])
-        venta   = costo * 1.13
+        # El modelo cotizador recibe variables CRUDAS y devuelve la VENTA limpia.
+        venta = float(cotizador.predict({
+            "ORIGEN":                      origen,
+            "DESTINO":                     destino,
+            "TIPO_DE_EQUIPO":              tipo_equipo,
+            "FLUJO":                       flujo,
+            "RANGO":                       rango,
+            "TIPO_DE_VENTA":               tipo_venta,
+            "MONTH":                       int(mes),
+            "CANTIDAD_ACCESORIALES_COSTO": accesoriales,
+        })[0])
+
+        # El costo se deriva de la venta para conservar el esquema de tickets.
+        costo   = venta / (1 + UTILIDAD)
+        mae_c   = mae / (1 + UTILIDAD)
 
         ss["ultima_cotizacion"] = {
             "cliente":        cliente,
-            "origen":         origen_est,
-            "destino":        destino_est,
+            "origen":         origen,
+            "destino":        destino,
             "tipo_equipo":    tipo_equipo,
             "flujo":          flujo,
             "rango":          rango,
             "costo_estimado": round(costo, 2),
-            "rango_min":      round(max(0, costo - mae), 2),
-            "rango_max":      round(costo + mae, 2),
+            "rango_min":      round(max(0, costo - mae_c), 2),
+            "rango_max":      round(costo + mae_c, 2),
             "venta_estimada": round(venta, 2),
-            "venta_min":      round(max(0, costo - mae) * 1.13, 2),
-            "venta_max":      round((costo + mae) * 1.13, 2),
+            "venta_min":      round(max(0, venta - mae), 2),
+            "venta_max":      round(venta + mae, 2),
         }
 
     if "ultima_cotizacion" in ss:
@@ -821,6 +824,8 @@ def modelado_page(): # with claude
                         # Invalidate cached model so next cotizacion loads the new one
                         if "modelo_payload" in ss:
                             del ss["modelo_payload"]
+                        if "cotizador" in ss:
+                            del ss["cotizador"]
  
                         st.success(
                             f" Modelo reentrenado exitosamente.\n\n"
